@@ -470,9 +470,10 @@ const createDevice = `
     name,
     registration_token_id,
     labels,
-    environment_variables
+    environment_variables,
+    info
   )
-  values (?, ?, ?, ?, ?, ?)
+  values (?, ?, ?, ?, ?, ?, '{}')
 `
 
 // Index: project_id_id
