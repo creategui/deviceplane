@@ -345,7 +345,7 @@ create table if not exists devices (
 
   name varchar(100) not null,
   registration_token_id varchar(32),
-  desired_agent_version varchar(100) not null,
+  desired_agent_version varchar(100),
   info longtext not null,
   last_seen_at timestamp not null default current_timestamp,
   labels longtext not null,
@@ -562,4 +562,3 @@ create table if not exists project_configs (
 --
 
 commit;
-

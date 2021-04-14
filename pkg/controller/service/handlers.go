@@ -3112,7 +3112,7 @@ func (s *Service) getBundle(w http.ResponseWriter, r *http.Request) {
 			DeviceID:             device.ID,
 			DeviceName:           device.Name,
 			EnvironmentVariables: device.EnvironmentVariables,
-			DesiredAgentVersion:  device.DesiredAgentVersion,
+			DesiredAgentVersion:  device.DesiredAgentVersion.String,
 		}
 
 		for _, application := range applications {
