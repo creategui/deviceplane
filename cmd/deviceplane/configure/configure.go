@@ -8,6 +8,7 @@ import (
 	"os/user"
 	"path/filepath"
 	"strings"
+	"net/url"
 
 	"github.com/deviceplane/deviceplane/pkg/interpolation"
 	"github.com/pkg/errors"
@@ -16,8 +17,9 @@ import (
 )
 
 type ConfigValues struct {
-	AccessKey *string `yaml:"access-key,omitempty"`
-	Project   *string `yaml:"project,omitempty"`
+	AccessKey   *string `yaml:"access-key,omitempty"`
+	Project     *string `yaml:"project,omitempty"`
+	APIEndpoint *string `yaml:"url,omitempty"`
 }
 
 func populateEmptyValuesFromConfig(c *kingpin.ParseContext) (err error) {
@@ -95,6 +97,11 @@ func populateEmptyValuesFromConfig(c *kingpin.ParseContext) (err error) {
 		if gConfig.Flags.Project == nil || *gConfig.Flags.Project == "" {
 			*gConfig.Flags.Project = *configValues.Project
 		}
+	}
+	// CONFIG will override FLAG
+	// TODO: Only use CONFIG if FLAG has default value.
+	if configValues.APIEndpoint != nil {
+		*gConfig.Flags.APIEndpoint, _ = url.Parse(*configValues.APIEndpoint)
 	}
 
 	return nil
