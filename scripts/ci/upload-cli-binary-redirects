@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
 OS_PLATFORM_ARG=(linux windows darwin)
