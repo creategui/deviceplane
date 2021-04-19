@@ -34,7 +34,7 @@ const getCommand = ({ id, projectId }) =>
     `VERSION=${config.agentVersion}`,
     `PROJECT=${projectId}`,
     `REGISTRATION_TOKEN=${id}`,
-    `CONTROLLER=${window.location.origin.toString()}/api`
+    `CONTROLLER=${window.location.origin.toString()}/api`,
     'bash',
   ].join(' ');
 
