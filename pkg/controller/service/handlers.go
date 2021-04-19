@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/apex/log"
@@ -102,9 +103,13 @@ func (s *Service) registerInternalUser(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		// temporary fix for not null in users.name
+		emailParts := strings.Split(registerRequest.Email, "@")
+		name := emailParts[0]
+
 		if s.email == nil {
 			// If email provider is nil then skip the registration workflow
-			user, err := s.users.InitializeUser(r.Context(), &internalUser.ID, nil)
+			user, err := s.users.InitializeUser(r.Context(), &internalUser.ID, nil, &name)
 			if err != nil {
 				log.WithError(err).Error("mark internal user registration completed")
 				w.WriteHeader(http.StatusInternalServerError)
@@ -186,15 +191,9 @@ func (s *Service) registerExternalUser(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		user, err := s.users.InitializeUser(r.Context(), nil, &externalUser.ID)
+		user, err := s.users.InitializeUser(r.Context(), nil, &externalUser.ID, &ssoJWT.Name)
 		if err != nil {
 			log.WithError(err).Error("initialize external user")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		user, err = s.users.UpdateUserName(r.Context(), user.ID, ssoJWT.Name)
-		if err != nil {
-			log.WithError(err).Error("update user name")
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -220,7 +219,17 @@ func (s *Service) confirmRegistration(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := s.users.InitializeUser(r.Context(), &registrationToken.InternalUserID, nil)
+	internalUser, err := s.internalUsers.GetInternalUser(r.Context(), registrationToken.InternalUserID)
+	if err != nil {
+		log.WithError(err).Error("get internal user")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	emailParts := strings.Split(internalUser.Email, "@")
+	name := emailParts[0]
+
+	user, err := s.users.InitializeUser(r.Context(), &registrationToken.InternalUserID, nil, &name)
 	if err != nil {
 		log.WithError(err).Error("mark internal user registration completed")
 		w.WriteHeader(http.StatusInternalServerError)

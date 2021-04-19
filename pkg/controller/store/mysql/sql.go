@@ -4,9 +4,10 @@ const initializeUser = `
   insert into users (
     id,
     internal_user_id,
-    external_user_id
+    external_user_id,
+    name
   )
-  values (?, ?, ?)
+  values (?, ?, ?, ?)
 `
 
 // Index: primary key

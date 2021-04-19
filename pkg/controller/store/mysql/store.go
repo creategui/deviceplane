@@ -145,7 +145,7 @@ func NewStore(db *sql.DB) *Store {
 	}
 }
 
-func (s *Store) InitializeUser(ctx context.Context, internalUserID, externalUserID *string) (*models.User, error) {
+func (s *Store) InitializeUser(ctx context.Context, internalUserID, externalUserID, name *string) (*models.User, error) {
 	id := newUserID()
 
 	if _, err := s.db.ExecContext(
@@ -154,6 +154,7 @@ func (s *Store) InitializeUser(ctx context.Context, internalUserID, externalUser
 		id,
 		internalUserID,
 		externalUserID,
+		name,
 	); err != nil {
 		return nil, err
 	}

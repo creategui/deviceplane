@@ -8,7 +8,7 @@ import (
 )
 
 type Users interface {
-	InitializeUser(ctx context.Context, internalUserID, externalUserID *string) (*models.User, error)
+	InitializeUser(ctx context.Context, internalUserID, externalUserID, name *string) (*models.User, error)
 	GetUser(ctx context.Context, id string) (*models.User, error)
 	GetUserByInternalID(ctx context.Context, internalUserID string) (*models.User, error)
 	GetUserByExternalID(ctx context.Context, externalUserID string) (*models.User, error)
